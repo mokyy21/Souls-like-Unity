@@ -26,6 +26,7 @@ namespace cleverbear
 
         void Start()
         {
+            Application.targetFrameRate = 60;
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
             rigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
@@ -36,12 +37,15 @@ namespace cleverbear
 
         public void Update()
         {
+        
+
             float delta = Time.deltaTime;
 
             inputHandler.TickInput(delta);
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
+            moveDirection.y = 0;
 
             float speed = movementSpeed;
             moveDirection *= speed;
