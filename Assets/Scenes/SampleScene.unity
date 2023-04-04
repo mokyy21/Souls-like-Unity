@@ -427,7 +427,7 @@ Transform:
   m_GameObject: {fileID: 490686217}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.4, y: 2.1, z: 6.9}
-  m_LocalScale: {x: 20.422, y: 3.3408, z: 3.8886}
+  m_LocalScale: {x: 21, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -573,7 +573,7 @@ Transform:
   m_GameObject: {fileID: 1000000473}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 10.9, y: 2.1, z: -0.1}
-  m_LocalScale: {x: 20.422, y: 3.3408, z: 3.8886}
+  m_LocalScale: {x: 21, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -670,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 1123493971}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -12.5, y: 2.1, z: -0.1}
-  m_LocalScale: {x: 20.422, y: 3.3408, z: 3.8886}
+  m_LocalScale: {x: 21, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -686,7 +686,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1132432584}
   - component: {fileID: 1132432585}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Camera Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -729,6 +729,9 @@ MonoBehaviour:
   pivotSpeed: 0.03
   minimumPivot: -35
   maximumPivot: 35
+  cameraSphereRadius: 0
+  cameraCollisionOffset: 0
+  minimumCollisionOffset: 0.2
 --- !u!1 &1162992301
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,7 +808,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -814,7 +817,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -938,7 +941,7 @@ Transform:
   m_GameObject: {fileID: 1260421612}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.4, y: 2.1, z: -8.59}
-  m_LocalScale: {x: 20.422, y: 3.3408, z: 3.8886}
+  m_LocalScale: {x: 21, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -953,7 +956,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2128052657}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Camera Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -968,7 +971,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128052656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2719,6 +2722,8 @@ MonoBehaviour:
   moveAmount: 0
   mouseX: 0
   mouseY: 0
+  b_Input: 0
+  rollFlag: 0
 --- !u!114 &5866666020494338781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2736,7 +2741,7 @@ MonoBehaviour:
   rigidbody: {fileID: 5866666020494338782}
   normalCamera: {fileID: 1162992301}
   movementSpeed: 5
-  rotationSpeed: 10
+  rotationSpeed: 5.5
 --- !u!54 &5866666020494338782
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2763,10 +2768,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.42943308
+  m_Radius: 0.4369099
   m_Height: 1.8416142
   m_Direction: 1
-  m_Center: {x: -0.03024301, y: 0.85790277, z: 0}
+  m_Center: {x: -0.019592613, y: 0.85790277, z: -0.015431583}
 --- !u!114 &5866666020494338784
 MonoBehaviour:
   m_ObjectHideFlags: 0

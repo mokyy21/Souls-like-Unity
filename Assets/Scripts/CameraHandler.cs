@@ -17,10 +17,11 @@ namespace cleverbear
 
         public static CameraHandler singleton;
 
-        public float lookSpeed = 0.03f;
+        public float lookSpeed = 0.001f;
         public float followSpeed = 0.1f;
-        public float pivotSpeed = 0.03f;
+        public float pivotSpeed = 0.001f;
 
+        private float targetPosition;
         private float defaultPosition;
         private float lookAngle;
         private float pivotAngle;
@@ -28,8 +29,13 @@ namespace cleverbear
         public float minimumPivot = -35f;
         public float maximumPivot = 35f;
 
+        public float cameraSphereRadius = 1f;
+        public float cameraCollisionOffset = 0.2f;
+        public float minimumCollisionOffset = 0.2f;
+
         private void Awake()
         {
+            Cursor.lockState = CursorLockMode.Locked;
             singleton = this;
             myTransform = transform;
             defaultPosition = cameraTransform.localPosition.z;
@@ -40,12 +46,14 @@ namespace cleverbear
         {
             Vector3 targetPosition = Vector3.SmoothDamp(myTransform.position, targetTransform.position, ref cameraFollowVelocity ,delta / followSpeed);
             myTransform.position = targetPosition;
+
+            HandleCameraCollisions(delta);
         }
 
         public void HandleCameraRotation(float delta , float mouseXInput, float mouseYInput)
         {
-            lookAngle += (mouseXInput * lookSpeed) / delta;
-            pivotAngle -= (mouseYInput * pivotSpeed) / delta;
+            lookAngle += (mouseXInput / 2f * lookSpeed) / delta;
+            pivotAngle -= (mouseYInput  / 1.5f * pivotSpeed) / delta;
             pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
             Vector3 rotation = Vector3.zero;
@@ -60,8 +68,31 @@ namespace cleverbear
             (transform.rotation, targetRotation, lookSpeed * Time.deltaTime);
             targetRotation = Quaternion.Euler(rotation);
             cameraPivotTransform.localRotation = targetRotation;
-            cameraPivotTransform.localRotation = Quaternion.Slerp
-            (cameraPivotTransform.localRotation, targetRotation, lookSpeed * Time.deltaTime);
+           
+        }
+
+        private void HandleCameraCollisions(float delta)
+        {
+            targetPosition = defaultPosition;
+            RaycastHit hit;
+
+            Vector3 direction = cameraTransform.position - cameraPivotTransform.position;
+            direction.Normalize();
+
+            if (Physics.SphereCast(cameraPivotTransform.position, cameraSphereRadius, direction, out hit, Mathf.Abs(targetPosition) , ignoreLayers))
+            {
+                float dis = Vector3.Distance(cameraPivotTransform.position, hit.point);
+                targetPosition = -(dis - cameraCollisionOffset);
+            }
+            
+            if (Mathf.Abs(targetPosition) < minimumCollisionOffset)
+            {
+                targetPosition = -minimumCollisionOffset;
+            }
+
+            cameraTransformPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta / 0.2f);
+            cameraTransform.localPosition = cameraTransformPosition;
+
         }
     }
 }

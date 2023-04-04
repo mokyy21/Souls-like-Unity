@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace cleverbear
 {
     public class InputHandler : MonoBehaviour
@@ -12,6 +11,11 @@ namespace cleverbear
         public float moveAmount;
         public float mouseX;
         public float mouseY;
+
+        public bool b_Input;
+
+        public bool rollFlag;
+        public bool isInteracting;
 
         PlayerControls inputActions;
         CameraHandler cameraHandler;
@@ -34,9 +38,10 @@ namespace cleverbear
                 cameraHandler.HandleCameraRotation(delta, mouseX, mouseY);
             }
         }
+
         public void OnEnable()
         {
-            if(inputActions == null)
+            if (inputActions == null)
             {
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
@@ -45,14 +50,18 @@ namespace cleverbear
 
             inputActions.Enable();
         }
+
         private void OnDisable()
         {
             inputActions.Disable();
         }
+
         public void TickInput(float delta)
         {
             MoveInput(delta);
+            HandleRollInput(delta);
         }
+
         private void MoveInput(float delta)
         {
             horizontal = movementInput.x;
@@ -60,6 +69,16 @@ namespace cleverbear
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
             mouseX = cameraInput.x;
             mouseY = cameraInput.y;
+        }
+
+        private void HandleRollInput(float delta)
+        {
+            b_Input = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Started;
+
+            if (b_Input)
+            {
+                rollFlag = true;
+            }
         }
     }
 }

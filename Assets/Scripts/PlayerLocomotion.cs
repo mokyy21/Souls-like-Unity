@@ -20,46 +20,32 @@ namespace cleverbear
 
         [Header("Stats")]
         [SerializeField]
-        public float movementSpeed = 5;
+        float movementSpeed = 5;
         [SerializeField]
-        public float rotationSpeed = 10;
+        float rotationSpeed = 10;
 
         void Start()
         {
-            Application.targetFrameRate = 60;
-            animatorHandler = GetComponentInChildren<AnimatorHandler>();
             rigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
+            animatorHandler = GetComponentInChildren<AnimatorHandler>();
             cameraObject = Camera.main.transform;
             myTransform = transform;
             animatorHandler.Initialize();
+
         }
 
         public void Update()
         {
-        
-
             float delta = Time.deltaTime;
 
             inputHandler.TickInput(delta);
-            moveDirection = cameraObject.forward * inputHandler.vertical;
-            moveDirection += cameraObject.right * inputHandler.horizontal;
-            moveDirection.Normalize();
-            moveDirection.y = 0;
+            HandleMovement(delta);
+            HandleRollingAndSprinting(delta);
 
-            float speed = movementSpeed;
-            moveDirection *= speed;
 
-            Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
-            rigidbody.velocity = projectedVelocity;
-
-            animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
-
-            if (animatorHandler.canRotate)
-            {
-                HandleRotation(delta);
-            }
         }
+
         #region Movement
         Vector3 normalVector;
         Vector3 targetPosition;
@@ -86,8 +72,51 @@ namespace cleverbear
             myTransform.rotation = targetRotation;
         }
 
-        #endregion
+        public void HandleMovement(float delta)
+        {
+            moveDirection = cameraObject.forward * inputHandler.vertical;
+            moveDirection += cameraObject.right * inputHandler.horizontal;
+            moveDirection.Normalize();
+            moveDirection.y = 0;
 
+            float speed = movementSpeed;
+            moveDirection *= speed;
+
+            Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
+            rigidbody.velocity = projectedVelocity;
+
+            animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
+
+            if (animatorHandler.canRotate)
+            {
+                HandleRotation(delta);
+            }
+        }
+
+        public void HandleRollingAndSprinting(float delta)
+        {
+            if (animatorHandler.anim.GetBool("isInteracting"))
+                return;
+
+            if (inputHandler.rollFlag)
+            {
+                moveDirection = cameraObject.forward * inputHandler.vertical;
+                moveDirection += cameraObject.right * inputHandler.horizontal;
+
+                if (inputHandler.moveAmount > 0)
+                {
+                    animatorHandler.PlayTargetAnimation("Rolling", true);
+                    moveDirection.y = 0;
+                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
+                    myTransform.rotation = rollRotation;
+                }
+                else
+                {
+                    animatorHandler.PlayTargetAnimation("Backstep", true);
+                }
+            }
+        }
+
+        #endregion
     }
 }
-
